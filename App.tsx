@@ -37,46 +37,40 @@ export default function App() {
     password: '',
   });
   const [page, setPage] = useState(0);
-  const [inputValue, setInputValue] = useState("");
   const onChange = (e) => {
     setFormValues({
       ...formValues,
       [e.target.id]: e.target.value,
     });
-    setInputValue(e.target.value)
   };
-  const changePage = (type) => {
+  const changePage = (e, type) => {
+    e.preventDefault()
     switch (type) {
       case 'next':
-        setPage((prev) => prev + 1);
-        setInputValue("")
+        (page!==fields.length - 1)? setPage((prev) => prev + 1) : "";
         break;
       case 'back':
         setPage((prev) => prev - 1);
-        setInputValue("")
     }
   };
 
   return (
     <div className="App">
     <form className="form">
-      {page > 0 ? <button type="button" onClick={() => changePage('back')}>Back</button> : ''}
+      {page > 0 ? <button type="submit" onClick={() => changePage(event,'back')}>Back</button> : ''}
       <label htmlFor={fields[page].id}>{fields[page].label}</label>
       <input
         type={fields[page].type}
         name={fields[page].name}
         id={fields[page].id}
         onChange={onChange}
-        value={inputValue}
+        value={formValues[fields[page].name]} //!!!
       />
-      {page < fields.length - 1 ? (
-        <button type="button" onClick={() => changePage('next')}>
-          Next
+        <button type="submit" disabled={!formValues[fields[page].name] && } onClick={() => changePage(event,'next')}> 
+        {/* disabled для невозможности идти дальше, пока не заполнишь поле */}
+        {page < fields.length - 1 ? "Next" : "Submit"}
         </button>
-      ) : (
-        <button type="button">Submit</button>
-      )}
-      {console.log(formValues)}
+      {console.log(formValues)} 
     </form>
     </div>
   );
