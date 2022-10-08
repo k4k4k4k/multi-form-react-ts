@@ -47,7 +47,12 @@ export default function App() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    page === lastPage ? setShowSuccess(true) : setPage((prev) => prev + 1);
+    page === lastPage
+      ? (function () {
+          setShowSuccess(true);
+          alert(JSON.stringify(formValues));
+        })()
+      : setPage((prev) => prev + 1);
   };
 
   const handleBackClick = () => {
