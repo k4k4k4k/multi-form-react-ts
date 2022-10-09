@@ -37,8 +37,11 @@ export default function App() {
     password: '',
   });
   const [page, setPage] = useState(0);
-  const [showSuccess, setShowSuccess] = useState(false);
   const lastPage = fields.length - 1;
+  const [showSuccess, setShowSuccess] = useState(
+    page === lastPage ? true : false
+  );
+
   const onChange = (e) => {
     setFormValues({
       ...formValues,
@@ -49,14 +52,31 @@ export default function App() {
     e.preventDefault();
     page === lastPage
       ? (function () {
-          setShowSuccess(true);
+          setShowSuccess(true); // may be replaced with ternary in showSuccess state
           alert(JSON.stringify(formValues));
-        })()
+        })() //IEFE to use
       : setPage((prev) => prev + 1);
   };
 
   const handleBackClick = () => {
     setPage((page) => page - 1);
+  };
+
+  const isValid = () => {
+    let valid = false;
+    if (fields[page].id == 'name') {
+      if (
+        formValues.name.length > 1 &&
+        formValues.name.charAt(0) == formValues.name.charAt(0).toUpperCase()
+      )
+        valid = true;
+        console.log(formValues)
+        console.log("NAME"+formValues.name)
+      console.log('first letter' + '   ' + formValues.name[0]);
+    }
+
+    return valid;
+    console.log();
   };
 
   return (
@@ -80,11 +100,14 @@ export default function App() {
             onChange={onChange}
             value={formValues[fields[page].name]} //!!!
           />
-          <button type="submit" disabled={!formValues[fields[page].name]}>
+          <button
+            type="submit"
+            disabled={!formValues[fields[page].name] && isValid()}
+          >
             {/* disabled для невозможности идти дальше, пока не заполнишь поле */}
             {page < fields.length - 1 ? 'Next' : 'Submit'}
           </button>
-          {console.log(formValues)}
+          {/* {console.log(formValues)} */}
         </form>
       )}
     </div>
